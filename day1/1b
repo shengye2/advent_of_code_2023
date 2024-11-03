@@ -1,1 +1,104 @@
+#include <stdio.h>    
+#include <string.h>
+#include <ctype.h>
 
+#define MAX 256       
+
+int find_number(char* line){
+
+    char letter = line[0];
+    
+    if (isdigit(letter)){
+        return letter -'0';
+    }
+    else{
+        switch(letter){
+            case 't':  
+                if (strstr(line+1,"wo")==line+1){
+                    return 2;
+                }else if(strstr(line+1,"hree")==line+1){
+                    return 3;
+                }
+                return 0;
+
+            case 'f':
+                if (strstr(line+1,"our")==line+1){
+                    return 4;
+                }else if(strstr(line+1,"ive")==line+1){
+                    return 5;
+                }
+                return 0;
+
+            case 's':
+                if (strstr(line+1,"ix")==line+1){
+                    return 6;
+                }else if(strstr(line+1,"even")==line+1){
+                    return 7;
+                }
+                return 0;
+
+            case 'o':
+                if (strstr(line+1,"ne")==line+1){
+                    return 1;
+                }
+                return 0;
+
+            case 'e':
+                if (strstr(line+1,"ight")==line+1){
+                    return 8;
+                }
+                return 0;
+
+            case 'n':
+                if (strstr(line+1,"ine")==line+1){
+                    return 9;
+                }
+                return 0;
+            default:
+                return 0;
+
+    }
+    }
+
+}
+
+
+
+int main() { 
+
+    FILE* fptr;           
+    char line[MAX];       
+    long total = 0;       
+
+   
+    fptr = fopen("../input.txt", "r");
+    if (fptr == NULL) {   
+        perror("Error opening file"); 
+        return 1;        
+    }
+
+    while (fgets(line, MAX, fptr)) {
+       char tens = -1;
+       char ones = -1;
+
+        for (int i=0; i<(int)strlen(line);i++) {
+            int n = find_number(line + i);
+            if (!n){
+                continue;
+            }
+
+            if (tens == -1){
+                tens = n;
+            }
+            ones=n;
+        }
+        total += tens*10 + ones;
+    }
+    
+    fclose(fptr);  
+
+
+    printf("%ld\n", total);
+
+    return 0; 
+}
