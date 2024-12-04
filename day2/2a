@@ -1,0 +1,76 @@
+#include <stdio.h>    
+#include <string.h>
+#include <stdlib.h>
+
+#define MAX 256
+#define MAX_RED 12
+#define MAX_BLUE 14
+#define MAX_GREEN 13
+
+
+int check_possible (char* line){
+
+    int red = 0;
+    int blue = 0;
+    int green = 0;
+    char delimiter[] = ",;";
+    char* endptr;
+    
+    char* start = (strchr(line,':'))+1;  //search ':' character and position one charac after
+
+    char* token = strtok(start,delimiter); //divide the line in token parts
+
+    while(token){
+        //printf(token);
+        
+
+        if (strstr(token,"blue")){                // search the "blue" word in the tokens
+            blue = strtol(token,&endptr,10);     
+        }
+        else if (strstr(token,"red")){        
+            red = strtol(token,&endptr,10);
+        }
+        else if (strstr(token,"green")){
+            green = strtol(token,&endptr,10);
+        }
+
+        if ((red > MAX_RED) || (blue > MAX_BLUE) || (green > MAX_GREEN)){
+            printf("red is %d, blue is %d, green is %d\n",red, blue, green);
+            return 0;
+        }
+
+        token = strtok(NULL, delimiter);      //Next token
+    }
+    
+    
+    return 1;
+}
+
+
+
+int main() { 
+
+    FILE* fptr;   
+    char line[MAX];
+    int id = 1;
+    long total = 0;
+    
+    fptr = fopen("input.txt", "r");
+    if (fptr == NULL) {   
+        perror("Error opening file"); 
+        return 1;        
+    }
+
+    while (fgets(line, MAX, fptr)) {
+       printf("%d ",id);
+       if(check_possible(line)){
+        total +=id;
+       }
+       id++;
+    }
+    
+    fclose(fptr);  
+
+    printf("%ld\n", total);
+    
+}
